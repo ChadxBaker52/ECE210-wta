@@ -22,28 +22,23 @@ module tb ();
   wire [7:0] uo_out;
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
-`ifdef GL_TEST
-  wire VPWR = 1'b1;
-  wire VGND = 1'b0;
-`endif
+  // Map the Tiny Tapeout-style cocotb signals to the local WTA module ports.
+  wire [1:0] wta_out;
+  wire       rst = ~rst_n;  // cocotb drives active-low reset, DUT expects active-high
 
-  // Replace tt_um_example with your module name:
-  tt_um_example user_project (
-
-      // Include power ports for the Gate Level test:
-`ifdef GL_TEST
-      .VPWR(VPWR),
-      .VGND(VGND),
-`endif
-
-      .ui_in  (ui_in),    // Dedicated inputs
-      .uo_out (uo_out),   // Dedicated outputs
-      .uio_in (uio_in),   // IOs: Input path
-      .uio_out(uio_out),  // IOs: Output path
-      .uio_oe (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
-      .ena    (ena),      // enable - goes high when design is selected
-      .clk    (clk),      // clock
-      .rst_n  (rst_n)     // not reset
+  wta_top user_project (
+      .clk(clk),
+      .rst(rst),
+      .in (ui_in),
+      .out(wta_out)
   );
+
+  // Expose DUT output on the expected cocotb-visible bus (LSBs only).
+  assign uo_out  = {6'b0, wta_out};
+  assign uio_out = 8'b0;
+  assign uio_oe  = 8'b0;
+
+  // Unused wrapper-only inputs.
+  wire _unused = &{ena, uio_in, 1'b0};
 
 endmodule
