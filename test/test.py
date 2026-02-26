@@ -19,7 +19,7 @@ async def test_project(dut):
     dut._log.info("Start")
 
     # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, units="us")
+    clock = Clock(dut.clk, 10, unit="us")
     cocotb.start_soon(clock.start())
 
     # Reset
@@ -47,6 +47,8 @@ async def test_project(dut):
         dut.ui_in.value = vector
         dut.uio_in.value = 0
         await RisingEdge(dut.clk)
+        # Gate-level simulations include propagation delays, so sample later in the cycle.
+        await FallingEdge(dut.clk)
         await ReadOnly()
 
         expected = expected_wta(vector)
@@ -54,4 +56,3 @@ async def test_project(dut):
         assert observed == expected, (
             f"ui_in=0x{vector:02x}: expected max {expected}, got {observed}"
         )
-        await FallingEdge(dut.clk)
