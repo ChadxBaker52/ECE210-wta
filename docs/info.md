@@ -25,8 +25,8 @@ Unused outputs (`uo_out[7:2]`) are driven low. All bidirectional pins (`uio[*]`)
 
 Simulation (cocotb):
 
-1. Install Python dependencies in the `test/` folder environment (including `cocotb`).
-2. Run `make -C test`.
+1. Install Python dependencies in the `test/` directory (including `cocotb`).
+2. Run `make -B` inside the `test/` directory.
 3. The cocotb test drives several `ui_in` patterns and checks that `uo_out[1:0]` matches the maximum of the four packed 2-bit candidates after a clock edge.
 
 Manual behavior check example:
