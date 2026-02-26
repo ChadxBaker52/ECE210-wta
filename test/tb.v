@@ -22,23 +22,25 @@ module tb ();
   wire [7:0] uo_out;
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
-  // Map the Tiny Tapeout-style cocotb signals to the local WTA module ports.
-  wire [1:0] wta_out;
-  wire       rst = ~rst_n;  // cocotb drives active-low reset, DUT expects active-high
+`ifdef GL_TEST
+  wire VPWR = 1'b1;
+  wire VGND = 1'b0;
+`endif
 
-  wta_top user_project (
-      .clk(clk),
-      .rst(rst),
-      .in (ui_in),
-      .out(wta_out)
+  // Instantiate the Tiny Tapeout top-level wrapper so RTL and GL tests use the same interface.
+  tt_um_example user_project (
+`ifdef GL_TEST
+      .VPWR(VPWR),
+      .VGND(VGND),
+`endif
+      .ui_in  (ui_in),
+      .uo_out (uo_out),
+      .uio_in (uio_in),
+      .uio_out(uio_out),
+      .uio_oe (uio_oe),
+      .ena    (ena),
+      .clk    (clk),
+      .rst_n  (rst_n)
   );
-
-  // Expose DUT output on the expected cocotb-visible bus (LSBs only).
-  assign uo_out  = {6'b0, wta_out};
-  assign uio_out = 8'b0;
-  assign uio_oe  = 8'b0;
-
-  // Unused wrapper-only inputs.
-  wire _unused = &{ena, uio_in, 1'b0};
 
 endmodule
