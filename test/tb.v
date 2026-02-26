@@ -28,7 +28,7 @@ module tb ();
 `endif
 
   // Instantiate the Tiny Tapeout top-level wrapper so RTL and GL tests use the same interface.
-  tt_um_example user_project (
+  tt_um_ChadxBaker52 user_project (
 `ifdef GL_TEST
       .VPWR(VPWR),
       .VGND(VGND),

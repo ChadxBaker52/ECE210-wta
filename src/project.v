@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_example (
+module tt_um_ChadxBaker52 (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -18,7 +18,7 @@ module tt_um_example (
 
   wire [1:0] wta_out;
 
-  wta_top wta_inst (
+  wta wta_inst (
       .clk(clk),
       .rst(~rst_n),
       .in (ui_in),

@@ -1,6 +1,6 @@
 `default_nettype none
 
-module wta_top (
+module wta (
     input  wire       clk,
     input  wire       rst,      // Active-high reset
     input  wire [7:0]  in,
